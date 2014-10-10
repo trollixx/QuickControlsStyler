@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     // Add known controls
-    m_controls = {
+    m_controls = QStringList{
         "BusyIndicator",
         "Button",
         "Calendar",
