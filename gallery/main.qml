@@ -44,20 +44,17 @@ import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 import "content"
 
-ApplicationWindow {
+Rectangle {
     visible: true
-    title: "Component Gallery"
 
-    width: 640
-    height: 420
-    minimumHeight: 400
-    minimumWidth: 600
+    SystemPalette {id: syspal}
+    color: syspal.window
 
     property string loremIpsum:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "+
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "+
-            "incididunt ut labore et dolore magna aliqua.\n Ut enim ad minim veniam, quis nostrud "+
-            "exercitation ullamco laboris nisi ut aliquip ex ea commodo cosnsequat. ";
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "+
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "+
+        "incididunt ut labore et dolore magna aliqua.\n Ut enim ad minim veniam, quis nostrud "+
+        "exercitation ullamco laboris nisi ut aliquip ex ea commodo cosnsequat. ";
 
     ImageViewer { id: imageViewer }
 
@@ -160,34 +157,40 @@ ApplicationWindow {
         }
     }
 
-    toolBar: ToolBar {
-        id: toolbar
-        RowLayout {
-            id: toolbarLayout
-            spacing: 0
-            anchors.fill: parent
-            ToolButton {
-                iconSource: "images/window-new.png"
-                onClicked: window1.visible = !window1.visible
-                Accessible.name: "New window"
-                tooltip: "Toggle visibility of the second window"
-            }
-            ToolButton { action: openAction }
-            ToolButton {
-                Accessible.name: "Save as"
-                iconSource: "images/document-save-as.png"
-                tooltip: "(Pretend to) Save as..."
-            }
-            Item { Layout.fillWidth: true }
-            CheckBox {
-                id: enabledCheck
-                text: "Enabled"
-                checked: true
+    ColumnLayout {
+        anchors.fill: parent
+
+        ToolBar {
+            id: toolbar
+
+            Layout.fillWidth: true
+
+            RowLayout {
+                id: toolbarLayout
+                spacing: 0
+                anchors.fill: parent
+                ToolButton {
+                    iconSource: "images/window-new.png"
+                    onClicked: window1.visible = !window1.visible
+                    Accessible.name: "New window"
+                    tooltip: "Toggle visibility of the second window"
+                }
+                ToolButton { action: openAction }
+                ToolButton {
+                    Accessible.name: "Save as"
+                    iconSource: "images/document-save-as.png"
+                    tooltip: "(Pretend to) Save as..."
+                }
+                Item { Layout.fillWidth: true }
+                CheckBox {
+                    id: enabledCheck
+                    text: "Enabled"
+                    checked: true
+                }
             }
         }
-    }
 
-    menuBar: MenuBar {
+        /*menuBar: MenuBar {
         Menu {
             title: "&File"
             MenuItem { action: openAction }
@@ -222,42 +225,40 @@ ApplicationWindow {
             title: "&Help"
             MenuItem { action: aboutAction }
         }
-    }
+    }*/
 
-
-    SystemPalette {id: syspal}
-    color: syspal.window
-    ListModel {
-        id: choices
-        ListElement { text: "Banana" }
-        ListElement { text: "Orange" }
-        ListElement { text: "Apple" }
-        ListElement { text: "Coconut" }
-    }
-
-    TabView {
-        id:frame
-        enabled: enabledCheck.checked
-        tabPosition: controlPage.item ? controlPage.item.tabPosition : Qt.TopEdge
-        anchors.fill: parent
-        anchors.margins: Qt.platform.os === "osx" ? 12 : 2
-
-        Tab {
-            id: controlPage
-            title: "Controls"
-            Controls { }
+        ListModel {
+            id: choices
+            ListElement { text: "Banana" }
+            ListElement { text: "Orange" }
+            ListElement { text: "Apple" }
+            ListElement { text: "Coconut" }
         }
-        Tab {
-            title: "Itemviews"
-            ModelView { }
-        }
-        Tab {
-            title: "Styles"
-            Styles { anchors.fill: parent }
-        }
-        Tab {
-            title: "Layouts"
-            Layouts { anchors.fill:parent }
+
+        TabView {
+            id:frame
+            enabled: enabledCheck.checked
+            tabPosition: controlPage.item ? controlPage.item.tabPosition : Qt.TopEdge
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Tab {
+                id: controlPage
+                title: "Controls"
+                Controls { }
+            }
+            Tab {
+                title: "Itemviews"
+                ModelView { }
+            }
+            Tab {
+                title: "Styles"
+                Styles { anchors.fill: parent }
+            }
+            Tab {
+                title: "Layouts"
+                Layouts { anchors.fill:parent }
+            }
         }
     }
 }

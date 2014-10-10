@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->controlComboBox->addItem(control);
 
     connect(ui->controlComboBox, &QComboBox::currentTextChanged, this, &MainWindow::chooseControl);
+    ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
 }
 
 MainWindow::~MainWindow()
