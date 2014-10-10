@@ -31,7 +31,21 @@
     </layout>
    </widget>
    <widget class="QWidget" name="widget2" native="true">
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Style:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="styleComboBox"/>
+       </item>
+      </layout>
+     </item>
      <item>
       <widget class="QQuickWidget" name="quickWidget">
        <property name="resizeMode">

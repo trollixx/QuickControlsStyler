@@ -40,12 +40,17 @@
 
 import QtQuick 2.2
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Private 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 import "content"
 
 Rectangle {
     visible: true
+
+    Component.onCompleted: Settings.styleName = Qt.binding(function () {
+        return styleName
+    })
 
     SystemPalette {id: syspal}
     color: syspal.window

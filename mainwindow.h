@@ -17,10 +17,12 @@ public:
 
 private slots:
     void chooseControl(const QString &name);
+    void selectStyle(const QString &name);
 
 private:
     Ui::MainWindow *ui;
     QStringList m_controls;
+    QStringList m_styles;
 };
 
 #endif // MAINWINDOW_H
