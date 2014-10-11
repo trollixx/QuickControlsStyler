@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "qmlsyntaxhighlighter.h"
 #include "stylemanager.h"
 
 #include <QQmlContext>
@@ -23,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
             m_styleManager, &StyleManager::loadStyle);
 
     ui->plainTextEdit->document()->setDefaultFont(QFont(QStringLiteral("Monospace"), 10));
+    new QMLSyntaxHighlighter(ui->plainTextEdit->document());
+
     ui->quickWidget->rootContext()
             ->setContextProperty(QStringLiteral("StyleManager"), m_styleManager);
     ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
