@@ -7,6 +7,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class StyleManager;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,12 +19,10 @@ public:
 
 private slots:
     void chooseControl(const QString &name);
-    void selectStyle(const QString &name);
 
 private:
     Ui::MainWindow *ui;
-    QStringList m_controls;
-    QStringList m_styles;
+    StyleManager *m_styleManager = nullptr;
 };
 
 #endif // MAINWINDOW_H

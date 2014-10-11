@@ -5,10 +5,14 @@ TARGET = qcstyler
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp \
+    stylemanager.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    mainwindow.h \
+    stylemanager.h
 
 FORMS    += mainwindow.ui
 

@@ -46,11 +46,15 @@ import QtQuick.Dialogs 1.0
 import "content"
 
 Rectangle {
-    visible: true
+    function updateStyle() {
+        Settings.styleName = StyleManager.currentStyleName;
+        Settings.stylePath = StyleManager.currentStylePath;
+    }
 
-    Component.onCompleted: Settings.styleName = Qt.binding(function () {
-        return styleName
-    })
+    Component.onCompleted: {
+        StyleManager.currentStyleChanged.connect(updateStyle);
+        updateStyle();
+    }
 
     SystemPalette {id: syspal}
     color: syspal.window
