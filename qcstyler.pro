@@ -10,14 +10,12 @@ SOURCES += \
     mainwindow.cpp \
     qmlsyntaxhighlighter.cpp \
     style.cpp \
-    stylemanager.cpp \
     stylerqmlobject.cpp
 
 HEADERS  += \
     mainwindow.h \
     qmlsyntaxhighlighter.h \
     style.h \
-    stylemanager.h \
     stylerqmlobject.h
 
 FORMS    += mainwindow.ui

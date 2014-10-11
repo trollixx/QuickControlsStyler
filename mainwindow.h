@@ -1,13 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "style.h"
+
 #include <QMainWindow>
 
 namespace Ui {
 class MainWindow;
 }
 
-class StyleManager;
 class StylerQmlObject;
 
 class MainWindow : public QMainWindow
@@ -22,11 +23,15 @@ private slots:
     void selectStyle(int index);
     void selectControl(const QString &name);
 
-private:
+private: // Methods
+    void findBuiltInStyles();
+
+private: // Variables
     Ui::MainWindow *ui;
-    StyleManager *m_styleManager = nullptr;
 
     StylerQmlObject *m_qmlStyler = nullptr;
+
+    QList<Style> m_styles;
 
     QHash <QString, QString> m_codeCache;
 };

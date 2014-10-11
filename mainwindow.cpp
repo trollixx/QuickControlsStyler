@@ -2,10 +2,11 @@
 #include "ui_mainwindow.h"
 
 #include "qmlsyntaxhighlighter.h"
-#include "stylemanager.h"
 #include "stylerqmlobject.h"
 
+#include <QDir>
 #include <QQmlContext>
+#include <QQmlEngine>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,9 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_qmlStyler(new StylerQmlObject(this))
 {
     ui->setupUi(this);
-    m_styleManager = new StyleManager(ui->quickWidget->engine(), this);
 
-    foreach (const Style &style, m_styleManager->availableStyles()) {
+    findBuiltInStyles();
+
+    foreach (const Style &style, m_styles) {
         QString name = style.name();
         if (style.isBuiltIn())
             name += tr(" (built-in)");
@@ -46,10 +48,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::selectStyle(int index)
 {
-    /// TODO: Remove StyleManager::selectStyle()
-    m_styleManager->selectStyle(index);
-
-    const Style &style = m_styleManager->style(index);
+    const Style &style = m_styles.at(index);
     qDebug("Selected style: %s", qPrintable(style.name()));
 
     ui->plainTextEdit->setReadOnly(style.isReadOnly());
@@ -72,7 +71,7 @@ void MainWindow::selectControl(const QString &name)
 
     qDebug("Loading code for: %s", qPrintable(name));
     if (!m_codeCache.contains(name)) {
-        const Style &style = m_styleManager->style(ui->styleComboBox->currentIndex());
+        const Style &style = m_styles.at(ui->styleComboBox->currentIndex());
         QScopedPointer<QFile> file(new QFile(style.controlFilePath(name)));
         if (!file->open(QIODevice::ReadOnly)) {
             qWarning("Cannot open file '%s': %s", qPrintable(file->fileName()),
@@ -83,4 +82,17 @@ void MainWindow::selectControl(const QString &name)
     }
 
     ui->plainTextEdit->setPlainText(m_codeCache.value(name));
+}
+
+void MainWindow::findBuiltInStyles()
+{
+    foreach (const QString &importPath, ui->quickWidget->engine()->importPathList()) {
+        QDir dir(importPath + QStringLiteral("/QtQuick/Controls/Styles"));
+        if (!dir.exists())
+            continue;
+        foreach (const QString &styleName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+            qDebug("Built-in style found: %s", qPrintable(styleName));
+            m_styles << Style(styleName, dir.absolutePath(), true);
+        }
+    }
 }
