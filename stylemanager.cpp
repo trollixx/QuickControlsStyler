@@ -53,6 +53,40 @@ QString StyleManager::currentStylePath() const
     return m_stylePaths.value(m_currentStyle);
 }
 
+QString StyleManager::controlStyleFilePath(const QString &controlName) const
+{
+    return QString("%1/%2/%3Style.qml")
+            .arg(currentStylePath()).arg(m_currentStyle).arg(controlName);
+}
+
+QString StyleManager::controlStyleCode(const QString &controlName) const
+{
+    if (!m_controls.contains(controlName))
+        return QString();
+
+    QScopedPointer<QFile> file(new QFile(controlStyleFilePath(controlName)));
+    if (!file->open(QIODevice::ReadOnly)) {
+        qWarning("Cannot open file '%s': %s", qPrintable(file->fileName()),
+                 qPrintable(file->errorString()));
+        return QString();
+    }
+    return file->readAll();
+}
+
+void StyleManager::setControlStyleCode(const QString &controlName, const QString &code)
+{
+    if (!m_controls.contains(controlName))
+        return;
+
+    QScopedPointer<QFile> file(new QFile(controlStyleFilePath(controlName)));
+    if (!file->open(QIODevice::WriteOnly)) {
+        qWarning("Cannot open file '%s': %s", qPrintable(file->fileName()),
+                 qPrintable(file->errorString()));
+        return;
+    }
+    file->write(code.toUtf8());
+}
+
 void StyleManager::addStyle(const QString &name, const QString &path)
 {
     m_styles << name;

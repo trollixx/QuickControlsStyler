@@ -20,6 +20,10 @@ public:
 
     QString currentStyleName() const;
     QString currentStylePath() const;
+    QString controlStyleFilePath(const QString &controlName) const;
+
+    QString controlStyleCode(const QString &controlName) const;
+    void setControlStyleCode(const QString &controlName, const QString &code);
 
 signals:
     void currentStyleChanged();

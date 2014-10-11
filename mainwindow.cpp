@@ -18,9 +18,11 @@ MainWindow::MainWindow(QWidget *parent) :
     foreach (const QString &style, m_styleManager->availableStyles())
         ui->styleComboBox->addItem(style);
 
-    //connect(ui->controlComboBox, &QComboBox::currentTextChanged, this, &MainWindow::chooseControl);
+    connect(ui->controlComboBox, &QComboBox::currentTextChanged, this, &MainWindow::chooseControl);
     connect(ui->styleComboBox, &QComboBox::currentTextChanged,
             m_styleManager, &StyleManager::loadStyle);
+
+    ui->plainTextEdit->document()->setDefaultFont(QFont(QStringLiteral("Monospace"), 10));
     ui->quickWidget->rootContext()
             ->setContextProperty(QStringLiteral("StyleManager"), m_styleManager);
     ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
@@ -33,5 +35,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::chooseControl(const QString &name)
 {
-    Q_UNUSED(name)
+    ui->plainTextEdit->setPlainText(m_styleManager->controlStyleCode(name));
 }
