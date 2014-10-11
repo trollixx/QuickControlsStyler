@@ -8,6 +8,7 @@ class MainWindow;
 }
 
 class StyleManager;
+class StylerQmlObject;
 
 class MainWindow : public QMainWindow
 {
@@ -24,6 +25,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     StyleManager *m_styleManager = nullptr;
+
+    StylerQmlObject *m_qmlStyler = nullptr;
 
     QHash <QString, QString> m_codeCache;
 };

@@ -12,20 +12,12 @@ class QQmlEngine;
 class StyleManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString currentStyleName READ currentStyleName NOTIFY currentStyleChanged)
-    Q_PROPERTY(QString currentStylePath READ currentStylePath NOTIFY currentStyleChanged)
 public:
     explicit StyleManager(QQmlEngine *qmlEngine, QObject *parent = 0);
 
     const QList<Style> &availableStyles() const;
 
-    QString currentStyleName() const;
-    QString currentStylePath() const;
-
     const Style &style(int index) const;
-
-signals:
-    void currentStyleChanged(int index);
 
 public slots:
     void selectStyle(int index);

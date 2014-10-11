@@ -47,12 +47,12 @@ import "content"
 
 Rectangle {
     function updateStyle() {
-        Settings.styleName = StyleManager.currentStyleName;
-        Settings.stylePath = StyleManager.currentStylePath;
+        Settings.styleName = __qcStyler.styleName;
+        Settings.stylePath = __qcStyler.stylePath;
     }
 
     Component.onCompleted: {
-        StyleManager.currentStyleChanged.connect(updateStyle);
+        __qcStyler.styleInfoChanged.connect(updateStyle);
         updateStyle();
     }
 

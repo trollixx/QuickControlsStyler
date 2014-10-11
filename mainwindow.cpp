@@ -3,12 +3,14 @@
 
 #include "qmlsyntaxhighlighter.h"
 #include "stylemanager.h"
+#include "stylerqmlobject.h"
 
 #include <QQmlContext>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_qmlStyler(new StylerQmlObject(this))
 {
     ui->setupUi(this);
     m_styleManager = new StyleManager(ui->quickWidget->engine(), this);
@@ -30,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     new QMLSyntaxHighlighter(ui->plainTextEdit->document());
 
     ui->quickWidget->rootContext()
-            ->setContextProperty(QStringLiteral("StyleManager"), m_styleManager);
+            ->setContextProperty(QStringLiteral("__qcStyler"), m_qmlStyler);
     ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
 
     if (ui->styleComboBox->count())
@@ -59,6 +61,8 @@ void MainWindow::selectStyle(int index)
         ui->controlComboBox->addItem(control, control);
     if (ui->controlComboBox->count())
         selectControl(0);
+
+    m_qmlStyler->setStyleInfo(style.name(), style.path());
 }
 
 void MainWindow::selectControl(const QString &name)
