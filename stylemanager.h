@@ -1,6 +1,8 @@
 #ifndef STYLEMANAGER_H
 #define STYLEMANAGER_H
 
+#include "style.h"
+
 #include <QHash>
 #include <QObject>
 #include <QStringList>
@@ -15,34 +17,26 @@ class StyleManager : public QObject
 public:
     explicit StyleManager(QQmlEngine *qmlEngine, QObject *parent = 0);
 
-    const QStringList &availableControls() const;
-    const QStringList &availableStyles() const;
+    const QList<Style> &availableStyles() const;
 
     QString currentStyleName() const;
     QString currentStylePath() const;
-    QString controlStyleFilePath(const QString &controlName) const;
 
-    QString controlStyleCode(const QString &controlName) const;
-    void setControlStyleCode(const QString &controlName, const QString &code);
+    const Style &style(int index) const;
 
 signals:
-    void currentStyleChanged();
+    void currentStyleChanged(int index);
 
 public slots:
-    void addStyle(const QString &name, const QString &path);
-    void loadStyle(const QString &name);
+    void selectStyle(int index);
 
 private:
-    void findDefaultStyles();
+    void findBuiltInStyles();
 
     QQmlEngine *m_qmlEngine;
 
-    QStringList m_controls;
-    QStringList m_styles;
-    QHash<QString, QString> m_stylePaths;
-
-    QString m_currentControl;
-    QString m_currentStyle;
+    QList<Style> m_styles;
+    int m_currentStyleIndex = -1;
 };
 
 #endif // STYLEMANAGER_H

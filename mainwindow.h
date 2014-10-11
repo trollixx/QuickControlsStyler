@@ -18,11 +18,14 @@ public:
     ~MainWindow();
 
 private slots:
-    void chooseControl(const QString &name);
+    void selectStyle(int index);
+    void selectControl(const QString &name);
 
 private:
     Ui::MainWindow *ui;
     StyleManager *m_styleManager = nullptr;
+
+    QHash <QString, QString> m_codeCache;
 };
 
 #endif // MAINWINDOW_H
