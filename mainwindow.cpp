@@ -33,12 +33,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->plainTextEdit->document()->setDefaultFont(QFont(QStringLiteral("Monospace"), 10));
     new QMLSyntaxHighlighter(ui->plainTextEdit->document());
 
+    if (ui->styleComboBox->count())
+        selectStyle(0);
+
     ui->quickWidget->rootContext()
             ->setContextProperty(QStringLiteral("__qcStyler"), m_qmlStyler);
     ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
-
-    if (ui->styleComboBox->count())
-        selectStyle(0);
 }
 
 MainWindow::~MainWindow()
