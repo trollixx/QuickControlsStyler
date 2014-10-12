@@ -23,6 +23,8 @@ private slots:
     void selectStyle(int index);
     void selectControl(const QString &name);
 
+    void newStyle();
+
 private: // Methods
     void findBuiltInStyles();
     void setupActions();

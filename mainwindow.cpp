@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <newstyledialog.h>
 #include "qmlsyntaxhighlighter.h"
 #include "stylerqmlobject.h"
 
@@ -85,6 +86,17 @@ void MainWindow::selectControl(const QString &name)
     ui->plainTextEdit->setPlainText(m_codeCache.value(name));
 }
 
+void MainWindow::newStyle()
+{
+    QStringList styleNames;
+    foreach (const Style &style, m_styles)
+        styleNames << style.name();
+
+    QScopedPointer<NewStyleDialog> dialog(new NewStyleDialog(styleNames, this));
+    if (dialog->exec() == QDialog::Rejected)
+        return;
+}
+
 void MainWindow::findBuiltInStyles()
 {
     foreach (const QString &importPath, ui->quickWidget->engine()->importPathList()) {
@@ -100,6 +112,7 @@ void MainWindow::findBuiltInStyles()
 
 void MainWindow::setupActions()
 {
+    connect(ui->actionNewStyle, &QAction::triggered, this, &MainWindow::newStyle);
     connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::quit);
 
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
