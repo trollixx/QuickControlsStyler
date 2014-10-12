@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_qmlStyler(new StylerQmlObject(this))
 {
     ui->setupUi(this);
+    setupActions();
 
     findBuiltInStyles();
 
@@ -95,4 +96,11 @@ void MainWindow::findBuiltInStyles()
             m_styles << Style(styleName, dir.absolutePath(), true);
         }
     }
+}
+
+void MainWindow::setupActions()
+{
+    connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::quit);
+
+    connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
 }

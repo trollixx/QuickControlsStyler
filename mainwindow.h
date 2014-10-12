@@ -25,6 +25,7 @@ private slots:
 
 private: // Methods
     void findBuiltInStyles();
+    void setupActions();
 
 private: // Variables
     Ui::MainWindow *ui;
