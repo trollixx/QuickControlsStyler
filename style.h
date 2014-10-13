@@ -15,6 +15,8 @@ public:
     QString path() const;
     void setPath(const QString &path);
 
+    QString fullPath() const;
+
     bool isBuiltIn() const;
     void setBuiltIn(bool isBuiltIn);
 

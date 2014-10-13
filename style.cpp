@@ -44,6 +44,11 @@ void Style::setPath(const QString &path)
     m_path = path;
 }
 
+QString Style::fullPath() const
+{
+    return m_path + QStringLiteral("/") + m_name;
+}
+
 bool Style::isBuiltIn() const
 {
     return m_builtIn;
