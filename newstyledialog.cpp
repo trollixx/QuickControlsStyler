@@ -74,6 +74,7 @@ void NewStyleDialog::checkLocation()
             warning = tr("Target directory already exists. Contents will be overwritten.");
     }
 
+    m_location = location;
     ui->warningLabel->setText(warning);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ok);
 }
