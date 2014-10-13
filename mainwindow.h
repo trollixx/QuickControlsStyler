@@ -28,6 +28,7 @@ private slots:
 private: // Methods
     void findBuiltInStyles();
     void setupActions();
+    static bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
 
 private: // Variables
     Ui::MainWindow *ui;

@@ -6,6 +6,7 @@
 #include "stylerqmlobject.h"
 
 #include <QDir>
+#include <QMessageBox>
 #include <QQmlContext>
 #include <QQmlEngine>
 
@@ -95,6 +96,14 @@ void MainWindow::newStyle()
     QScopedPointer<NewStyleDialog> dialog(new NewStyleDialog(styleNames, this));
     if (dialog->exec() == QDialog::Rejected)
         return;
+
+    /// TODO: Copy only required files?
+    const QString destination = dialog->location() + QStringLiteral("/") + dialog->name();
+    if (!copyRecursively(baseStyle.fullPath(), destination)) {
+        QMessageBox::warning(this, tr("Error"),
+                             tr("Cannot create style in the specified location."));
+        return;
+    }
 }
 
 void MainWindow::findBuiltInStyles()
@@ -116,4 +125,28 @@ void MainWindow::setupActions()
     connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::quit);
 
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
+}
+
+// Taken from Qt Creator (src/app/main.cpp)
+bool MainWindow::copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)
+{
+    QFileInfo srcFileInfo(srcFilePath);
+    if (srcFileInfo.isDir()) {
+        QDir targetDir(tgtFilePath);
+        targetDir.cdUp();
+        if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
+            return false;
+        QDir sourceDir(srcFilePath);
+        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+        foreach (const QString &fileName, fileNames) {
+            const QString newSrcFilePath = srcFilePath + QStringLiteral("/") + fileName;
+            const QString newTgtFilePath = tgtFilePath + QStringLiteral("/") + fileName;
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath))
+                return false;
+        }
+    } else {
+        if (!QFile::copy(srcFilePath, tgtFilePath))
+            return false;
+    }
+    return true;
 }
