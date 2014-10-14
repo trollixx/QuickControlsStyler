@@ -20,15 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     findBuiltInStyles();
 
-    foreach (const Style &style, m_styles) {
-        QString name = style.name();
-        if (style.isBuiltIn())
-            name += tr(" (built-in)");
-        if (style.isReadOnly())
-            name += tr(" (read only)");
-        ui->styleComboBox->addItem(name);
-    }
-
     connect(ui->controlComboBox, &QComboBox::currentTextChanged, this, &MainWindow::selectControl);
     connect(ui->styleComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &MainWindow::selectStyle);
@@ -107,10 +98,23 @@ void MainWindow::newStyle()
         return;
     }
 
-    Style newStyle(dialog->name(), dialog->location());
-    m_styles.append(newStyle);
-    ui->styleComboBox->addItem(newStyle.name());
-    ui->styleComboBox->setCurrentIndex(ui->styleComboBox->count() - 1);
+    addStyle(Style(dialog->name(), dialog->location()));
+}
+
+void MainWindow::addStyle(const Style &style, bool select)
+{
+    m_styles.append(style);
+
+    QString displayName = style.name();
+    if (style.isBuiltIn())
+        displayName += tr(" (built-in)");
+    if (style.isReadOnly())
+        displayName += tr(" (read only)");
+
+    ui->styleComboBox->addItem(displayName);
+
+    if (select)
+        ui->styleComboBox->setCurrentIndex(ui->styleComboBox->count() - 1);
 }
 
 void MainWindow::findBuiltInStyles()
@@ -121,7 +125,7 @@ void MainWindow::findBuiltInStyles()
             continue;
         foreach (const QString &styleName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
             qDebug("Built-in style found: %s", qPrintable(styleName));
-            m_styles << Style(styleName, dir.absolutePath(), true);
+            addStyle(Style(styleName, dir.absolutePath(), true), false);
         }
     }
 }

@@ -26,6 +26,7 @@ private slots:
     void newStyle();
 
 private: // Methods
+    void addStyle(const Style &style, bool select = true);
     void findBuiltInStyles();
     void setupActions();
     static bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
