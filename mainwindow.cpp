@@ -104,6 +104,11 @@ void MainWindow::newStyle()
                              tr("Cannot create style in the specified location."));
         return;
     }
+
+    Style newStyle(dialog->name(), dialog->location());
+    m_styles.append(newStyle);
+    ui->styleComboBox->addItem(newStyle.name());
+    ui->styleComboBox->setCurrentIndex(ui->styleComboBox->count() - 1);
 }
 
 void MainWindow::findBuiltInStyles()
