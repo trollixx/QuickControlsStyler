@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <newstyledialog.h>
+#include "newstyledialog.h"
 #include "qmlsyntaxhighlighter.h"
 #include "stylerqmlobject.h"
 
