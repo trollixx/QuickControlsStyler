@@ -47,8 +47,7 @@ import "content"
 
 Rectangle {
     function updateStyle() {
-        Settings.styleName = __qcStyler.styleName;
-        Settings.stylePath = __qcStyler.stylePath;
+        Settings.style = "file://" + __qcStyler.stylePath + "/" + __qcStyler.styleName
     }
 
     Component.onCompleted: {
