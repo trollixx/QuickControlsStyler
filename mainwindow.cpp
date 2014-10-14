@@ -6,6 +6,7 @@
 #include "stylerqmlobject.h"
 
 #include <QDir>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -101,6 +102,13 @@ void MainWindow::newStyle()
     addStyle(Style(dialog->name(), dialog->location()));
 }
 
+void MainWindow::openStyle()
+{
+    const QFileInfo fi(QFileDialog::getExistingDirectory(this));
+    if (!fi.exists())
+        return;
+    addStyle(Style(fi.fileName(), fi.absolutePath()));
+}
 void MainWindow::addStyle(const Style &style, bool select)
 {
     m_styles.append(style);
@@ -133,6 +141,7 @@ void MainWindow::findBuiltInStyles()
 void MainWindow::setupActions()
 {
     connect(ui->actionNewStyle, &QAction::triggered, this, &MainWindow::newStyle);
+    connect(ui->actionOpenStyle, &QAction::triggered, this, &MainWindow::openStyle);
     connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::quit);
 
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);

@@ -24,6 +24,7 @@ private slots:
     void selectControl(const QString &name);
 
     void newStyle();
+    void openStyle();
 
 private: // Methods
     void addStyle(const Style &style, bool select = true);
