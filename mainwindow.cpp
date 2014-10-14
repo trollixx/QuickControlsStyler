@@ -97,8 +97,10 @@ void MainWindow::newStyle()
     if (dialog->exec() == QDialog::Rejected)
         return;
 
-    /// TODO: Copy only required files?
+    const Style &baseStyle = m_styles.at(dialog->baseStyleIndex());
     const QString destination = dialog->location() + QStringLiteral("/") + dialog->name();
+
+    /// TODO: Copy only required files?
     if (!copyRecursively(baseStyle.fullPath(), destination)) {
         QMessageBox::warning(this, tr("Error"),
                              tr("Cannot create style in the specified location."));
