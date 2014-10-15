@@ -89,6 +89,7 @@ void MainWindow::selectControl(int index)
         const Style &style = m_styles.at(ui->styleComboBox->currentIndex());
         QScopedPointer<QFile> file(new QFile(style.controlFilePath(name)));
         if (!file->open(QIODevice::ReadOnly)) {
+            /// TODO: MessageBox
             qWarning("Cannot open file '%s': %s", qPrintable(file->fileName()),
                      qPrintable(file->errorString()));
             return;
@@ -205,6 +206,7 @@ void MainWindow::save(const QString &name)
 
     QScopedPointer<QFile> file(new QFile(cci.filePath));
     if (!file->open(QIODevice::WriteOnly)) {
+        /// TODO: MessageBox
         qWarning("Cannot open file '%s': %s", qPrintable(file->fileName()),
                  qPrintable(file->errorString()));
         return;
