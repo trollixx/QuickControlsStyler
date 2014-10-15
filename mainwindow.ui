@@ -97,6 +97,9 @@
    <property name="text">
     <string>&amp;New Style...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionExit">
    <property name="text">
@@ -111,6 +114,9 @@
   <action name="actionOpenStyle">
    <property name="text">
     <string>&amp;Open Style...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionSaveFile">
