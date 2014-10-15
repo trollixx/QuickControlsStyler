@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_qmlStyler(new StylerQmlObject(this))
 {
     ui->setupUi(this);
+    ui->controlComboBox->setFocusProxy(ui->plainTextEdit);
+
     setupActions();
 
     findBuiltInStyles();
