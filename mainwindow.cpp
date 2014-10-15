@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,9 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     findBuiltInStyles();
 
-    connect(ui->controlComboBox, &QComboBox::currentTextChanged, this, &MainWindow::selectControl);
+    connect(ui->controlComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MainWindow::selectControl);
     connect(ui->styleComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &MainWindow::selectStyle);
+    connect(ui->plainTextEdit, &QPlainTextEdit::textChanged, [this]() {
+        if (ui->plainTextEdit->document()->isModified())
+            updateModifiedMark(m_currentControlName, true);
+    });
 
     ui->plainTextEdit->document()->setDefaultFont(QFont(QStringLiteral("Monospace"), 10));
     new QMLSyntaxHighlighter(ui->plainTextEdit->document());
@@ -43,27 +49,37 @@ MainWindow::~MainWindow()
 
 void MainWindow::selectStyle(int index)
 {
+    if (index < 0)
+        return;
+
     const Style &style = m_styles.at(index);
     qDebug("Selected style: %s", qPrintable(style.name()));
 
     ui->plainTextEdit->setReadOnly(style.isReadOnly());
-    ui->plainTextEdit->clear();
     m_codeCache.clear();
 
     ui->controlComboBox->clear();
     foreach (const QString &control, style.controls())
         ui->controlComboBox->addItem(control, control);
-    if (ui->controlComboBox->count())
-        selectControl(0);
 
     m_qmlStyler->setStyleInfo(style.name(), style.path());
 }
 
-void MainWindow::selectControl(const QString &name)
+void MainWindow::selectControl(int index)
 {
-    if (name.isEmpty())
+    if (index < 0)
         return;
 
+    if (m_codeCache.contains(m_currentControlName)) {
+        CodeCacheItem &cci = m_codeCache[m_currentControlName];
+        cci.cursorPosition = ui->plainTextEdit->textCursor().position();
+        cci.horizontalScrollPosition = ui->plainTextEdit->horizontalScrollBar()->value();
+        cci.verticalScrollPosition = ui->plainTextEdit->verticalScrollBar()->value();
+        if (ui->plainTextEdit->document()->isModified())
+            cci.code = ui->plainTextEdit->toPlainText();
+    }
+
+    const QString name = ui->controlComboBox->itemData(index).toString();
     qDebug("Loading code for: %s", qPrintable(name));
     if (!m_codeCache.contains(name)) {
         const Style &style = m_styles.at(ui->styleComboBox->currentIndex());
@@ -73,10 +89,45 @@ void MainWindow::selectControl(const QString &name)
                      qPrintable(file->errorString()));
             return;
         }
-        m_codeCache.insert(name, file->readAll());
+        CodeCacheItem cci;
+        cci.index = index;
+        cci.name = name;
+        cci.code = file->readAll();
+        m_codeCache.insert(name, cci);
     }
 
-    ui->plainTextEdit->setPlainText(m_codeCache.value(name));
+    m_currentControlName = name;
+
+    const CodeCacheItem &cci = m_codeCache[name];
+
+    // Avoid textChanged() signal, when another file is loaded
+    ui->plainTextEdit->blockSignals(true);
+    ui->plainTextEdit->setPlainText(cci.code);
+    ui->plainTextEdit->blockSignals(false);
+
+    QTextCursor textCursor = ui->plainTextEdit->textCursor();
+    textCursor.setPosition(cci.cursorPosition);
+    ui->plainTextEdit->setTextCursor(textCursor);
+
+    ui->plainTextEdit->horizontalScrollBar()->setValue(cci.horizontalScrollPosition);
+    ui->plainTextEdit->verticalScrollBar()->setValue(cci.verticalScrollPosition);
+}
+
+void MainWindow::updateModifiedMark(const QString &name, bool modified)
+{
+    CodeCacheItem &cci = m_codeCache[name];
+
+    if (cci.modified == modified)
+        return;
+
+    cci.modified = modified;
+
+    QString displayName = cci.name;
+
+    if (modified)
+        displayName += QStringLiteral(" *");
+
+    ui->controlComboBox->setItemText(cci.index, displayName);
 }
 
 void MainWindow::newStyle()

@@ -21,7 +21,8 @@ public:
 
 private slots:
     void selectStyle(int index);
-    void selectControl(const QString &name);
+    void selectControl(int index);
+    void updateModifiedMark(const QString &name, bool modified);
 
     void newStyle();
     void openStyle();
@@ -39,7 +40,18 @@ private: // Variables
 
     QList<Style> m_styles;
 
-    QHash <QString, QString> m_codeCache;
+    struct CodeCacheItem {
+        int index;
+        QString name;
+        QString code;
+        int cursorPosition = 0;
+        int horizontalScrollPosition = 0;
+        int verticalScrollPosition = 0;
+        bool modified = false;
+    };
+
+    QHash <QString, CodeCacheItem> m_codeCache;
+    QString m_currentControlName;
 };
 
 #endif // MAINWINDOW_H
