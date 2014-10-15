@@ -58,6 +58,8 @@ void MainWindow::selectStyle(int index)
     qDebug("Selected style: %s", qPrintable(style.name()));
 
     ui->plainTextEdit->setReadOnly(style.isReadOnly());
+    ui->actionSaveFile->setEnabled(!style.isReadOnly());
+    ui->actionSaveAll->setEnabled(!style.isReadOnly());
     m_codeCache.clear();
 
     ui->controlComboBox->clear();
@@ -94,6 +96,7 @@ void MainWindow::selectControl(int index)
         CodeCacheItem cci;
         cci.index = index;
         cci.name = name;
+        cci.filePath = file->fileName();
         cci.code = file->readAll();
         m_codeCache.insert(name, cci);
     }
@@ -130,6 +133,9 @@ void MainWindow::updateModifiedMark(const QString &name, bool modified)
         displayName += QStringLiteral(" *");
 
     ui->controlComboBox->setItemText(cci.index, displayName);
+
+    if (cci.name == m_currentControlName)
+        ui->plainTextEdit->document()->setModified(false);
 }
 
 void MainWindow::newStyle()
@@ -162,6 +168,18 @@ void MainWindow::openStyle()
         return;
     addStyle(Style(fi.fileName(), fi.absolutePath()));
 }
+
+void MainWindow::saveFile()
+{
+    save(m_currentControlName);
+}
+
+void MainWindow::saveAll()
+{
+    foreach (const QString &name, m_codeCache.keys())
+        save(name);
+}
+
 void MainWindow::addStyle(const Style &style, bool select)
 {
     m_styles.append(style);
@@ -176,6 +194,33 @@ void MainWindow::addStyle(const Style &style, bool select)
 
     if (select)
         ui->styleComboBox->setCurrentIndex(ui->styleComboBox->count() - 1);
+}
+
+void MainWindow::save(const QString &name)
+{
+    CodeCacheItem &cci = m_codeCache[name];
+
+    if (!cci.modified)
+        return;
+
+    QScopedPointer<QFile> file(new QFile(cci.filePath));
+    if (!file->open(QIODevice::WriteOnly)) {
+        qWarning("Cannot open file '%s': %s", qPrintable(file->fileName()),
+                 qPrintable(file->errorString()));
+        return;
+    }
+
+    if (name == m_currentControlName)
+        cci.code = ui->plainTextEdit->toPlainText();
+
+    if (file->write(cci.code.toUtf8()) == -1) {
+        /// TODO: MessageBox
+        qWarning("Cannot write to file '%s': %s", qPrintable(file->fileName()),
+                 qPrintable(file->errorString()));
+        return;
+    }
+
+    updateModifiedMark(cci.name, false);
 }
 
 void MainWindow::findBuiltInStyles()
@@ -195,6 +240,8 @@ void MainWindow::setupActions()
 {
     connect(ui->actionNewStyle, &QAction::triggered, this, &MainWindow::newStyle);
     connect(ui->actionOpenStyle, &QAction::triggered, this, &MainWindow::openStyle);
+    connect(ui->actionSaveFile, &QAction::triggered, this, &MainWindow::saveFile);
+    connect(ui->actionSaveAll, &QAction::triggered, this, &MainWindow::saveAll);
     connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::quit);
 
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
