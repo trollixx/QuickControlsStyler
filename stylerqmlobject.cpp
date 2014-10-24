@@ -1,7 +1,10 @@
 #include "stylerqmlobject.h"
 
-StylerQmlObject::StylerQmlObject(QObject *parent) :
-    QObject(parent)
+#include <QQmlEngine>
+
+StylerQmlObject::StylerQmlObject(QQmlEngine *engine, QObject *parent) :
+    QObject(parent),
+    m_engine(engine)
 {
 }
 
@@ -20,4 +23,9 @@ QString StylerQmlObject::styleName() const
 QString StylerQmlObject::stylePath() const
 {
     return m_path;
+}
+
+void StylerQmlObject::trimCache()
+{
+    m_engine->trimComponentCache();
 }

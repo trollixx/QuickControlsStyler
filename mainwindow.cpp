@@ -14,8 +14,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    m_qmlStyler(new StylerQmlObject(this))
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->controlComboBox->setFocusProxy(ui->plainTextEdit);
@@ -39,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (ui->styleComboBox->count())
         selectStyle(0);
 
+    m_qmlStyler = new StylerQmlObject(ui->quickWidget->engine(), this);
     ui->quickWidget->rootContext()
             ->setContextProperty(QStringLiteral("__qcStyler"), m_qmlStyler);
     ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
