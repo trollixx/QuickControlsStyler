@@ -46,13 +46,30 @@ import QtQuick.Dialogs 1.0
 import "content"
 
 Rectangle {
-    function updateStyle() {
-        Settings.style = "file://" + __qcStyler.stylePath + "/" + __qcStyler.styleName
+    /// TODO: Remove once https://codereview.qt-project.org/97060 gets into Qt
+    readonly property bool patchedQt: {
+        var patched = false;
+        try {
+            // If Settings.styleName is readonly, then Qt Quick Controls have my patch
+            var styleName = Settings.styleName;
+            Settings.styleName = styleName;
+        } catch (e) {
+            patched = true;
+        }
+        return patched;
     }
 
-    Component.onCompleted: {
-        __qcStyler.styleInfoChanged.connect(updateStyle);
-        updateStyle();
+    function updateStyle() {
+        if (patchedQt) {
+            Settings.style = ""
+            __qcStyler.trimCache();
+            Settings.style = "file://" + __qcStyler.stylePath + "/" + __qcStyler.styleName
+        } else {
+            Settings.stylePath = ""
+            __qcStyler.trimCache();
+            Settings.stylePath = __qcStyler.stylePath
+            Settings.styleName = __qcStyler.styleName
+        }
     }
 
     SystemPalette {id: syspal}
