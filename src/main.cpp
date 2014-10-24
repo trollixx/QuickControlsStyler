@@ -26,10 +26,10 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QScopedPointer<QApplication> app(new QApplication(argc, argv));
 
-    MainWindow w;
-    w.show();
+    QScopedPointer<MainWindow> window(new MainWindow());
+    window->show();
 
-    return a.exec();
+    return app->exec();
 }
