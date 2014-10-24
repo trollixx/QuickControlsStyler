@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Centring splitter handle
+    const int half = ui->splitter->width() / 2 - ui->splitter->handleWidth();
+    ui->splitter->setSizes({half, half});
     ui->controlComboBox->setFocusProxy(ui->plainTextEdit);
 
     setupActions();
