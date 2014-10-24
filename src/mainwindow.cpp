@@ -84,7 +84,6 @@ void MainWindow::selectStyle(int index)
         return;
 
     const Style &style = m_styles.at(index);
-    qDebug("Selected style: %s", qPrintable(style.name()));
 
     ui->plainTextEdit->setReadOnly(style.isReadOnly());
     ui->actionSaveFile->setEnabled(!style.isReadOnly());
@@ -113,7 +112,6 @@ void MainWindow::selectControl(int index)
     }
 
     const QString name = ui->controlComboBox->itemData(index).toString();
-    qDebug("Loading code for: %s", qPrintable(name));
     if (!m_codeCache.contains(name)) {
         const Style &style = m_styles.at(ui->styleComboBox->currentIndex());
         QScopedPointer<QFile> file(new QFile(style.controlFilePath(name)));
@@ -305,10 +303,8 @@ void MainWindow::findBuiltInStyles()
         QDir dir(importPath + QStringLiteral("/QtQuick/Controls/Styles"));
         if (!dir.exists())
             continue;
-        foreach (const QString &styleName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-            qDebug("Built-in style found: %s", qPrintable(styleName));
+        foreach (const QString &styleName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
             addStyle(Style(styleName, dir.absolutePath(), true), false);
-        }
     }
 }
 
