@@ -24,4 +24,5 @@ FORMS    += \
     mainwindow.ui \
     newstyledialog.ui
 
-RESOURCES += gallery/resources.qrc
+RESOURCES += gallery/resources.qrc \
+    qml.qrc

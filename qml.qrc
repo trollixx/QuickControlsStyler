@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>preview/Button.qml</file>
+        <file>preview/main.qml</file>
+        <file>preview/BusyIndicator.qml</file>
+        <file>preview/Calendar.qml</file>
+        <file>preview/CheckBox.qml</file>
+        <file>preview/ComboBox.qml</file>
+        <file>preview/ProgressBar.qml</file>
+        <file>preview/RadioButton.qml</file>
+        <file>preview/Slider.qml</file>
+        <file>preview/SpinBox.qml</file>
+        <file>preview/Switch.qml</file>
+    </qresource>
+</RCC>

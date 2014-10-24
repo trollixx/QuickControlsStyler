@@ -47,7 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->quickWidget->rootContext()
             ->setContextProperty(QStringLiteral("__qcStyler"), m_qmlStyler);
-    ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
+
+    ui->quickWidget->setSource(QStringLiteral("qrc:/preview/main.qml"));
 }
 
 MainWindow::~MainWindow()
