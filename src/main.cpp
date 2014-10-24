@@ -26,6 +26,10 @@
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setApplicationName(QStringLiteral("QCStyler"));
+    QCoreApplication::setOrganizationDomain(QStringLiteral("wisetroll.com"));
+    QCoreApplication::setOrganizationName(QStringLiteral("WiseTroll"));
+
     QScopedPointer<QApplication> app(new QApplication(argc, argv));
 
     QScopedPointer<MainWindow> window(new MainWindow());
