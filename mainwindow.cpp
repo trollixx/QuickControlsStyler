@@ -123,6 +123,8 @@ void MainWindow::selectControl(int index)
 
     ui->plainTextEdit->horizontalScrollBar()->setValue(cci.horizontalScrollPosition);
     ui->plainTextEdit->verticalScrollBar()->setValue(cci.verticalScrollPosition);
+
+    m_qmlStyler->setCurrentControl(name);
 }
 
 void MainWindow::updateModifiedMark(const QString &name, bool modified)

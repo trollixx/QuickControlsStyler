@@ -29,3 +29,17 @@ void StylerQmlObject::trimCache()
 {
     m_engine->trimComponentCache();
 }
+
+QString StylerQmlObject::currentControl() const
+{
+    return m_currentControl;
+}
+
+void StylerQmlObject::setCurrentControl(const QString &currentControl)
+{
+    if (currentControl == m_currentControl)
+        return;
+
+    m_currentControl = currentControl;
+    emit currentControlChanged();
+}
