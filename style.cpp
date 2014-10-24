@@ -19,9 +19,23 @@ Style::Style(const QString &name, const QString &path, bool builtIn) :
     // Built-in styles are read-only by default
     m_readOnly = m_builtIn ?  true : !QFileInfo(dir.absolutePath()).isWritable();
 
+    /// TODO: Move to Settings
+    /// TODO: Implement preview
+    static QStringList ignoredControls = {
+        QStringLiteral("ApplicationWindow"),
+        QStringLiteral("FocusFrame"),
+        QStringLiteral("GroupBox"),
+        QStringLiteral("MenuBar"),
+        QStringLiteral("Menu")
+    };
+
     const QString styleSuffix = QStringLiteral("*Style.qml");
-    foreach (const QString &fileName, dir.entryList({styleSuffix}, QDir::Files | QDir::Readable))
-        m_controls << fileName.left(fileName.length() - styleSuffix.length() + 1);
+    foreach (const QString &fileName, dir.entryList({styleSuffix}, QDir::Files | QDir::Readable)) {
+        const QString name = fileName.left(fileName.length() - styleSuffix.length() + 1);
+        if (ignoredControls.contains(name))
+            continue;
+        m_controls << name;
+    }
 }
 
 QString Style::name() const
