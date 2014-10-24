@@ -44,6 +44,7 @@ private slots:
 private: // Methods
     void addStyle(const Style &style, bool select = true);
     void save(const QString &name);
+    void reloadPreview();
     void findBuiltInStyles();
     void setupActions();
     static bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);

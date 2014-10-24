@@ -182,12 +182,14 @@ void MainWindow::openStyle()
 void MainWindow::saveFile()
 {
     save(m_currentControlName);
+    reloadPreview();
 }
 
 void MainWindow::saveAll()
 {
     foreach (const QString &name, m_codeCache.keys())
         save(name);
+    reloadPreview();
 }
 
 void MainWindow::addStyle(const Style &style, bool select)
@@ -232,6 +234,13 @@ void MainWindow::save(const QString &name)
     }
 
     updateModifiedMark(cci.name, false);
+}
+
+void MainWindow::reloadPreview()
+{
+    ui->quickWidget->engine()->clearComponentCache();
+    /// TODO: Implement style reloading in QQuickStyleSettings
+    ui->quickWidget->setSource(QStringLiteral("qrc:/preview/main.qml"));
 }
 
 void MainWindow::findBuiltInStyles()
