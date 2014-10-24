@@ -109,6 +109,8 @@ Rectangle {
                 source: __qcStyler.currentControl + ".qml"
                 width: item ? item.implicitWidth : parent.width
                 height: item ? item.implicitHeight : parent.height
+
+                onSourceChanged: container.scale = 1
             }
 
             Text {
