@@ -150,6 +150,11 @@ void MainWindow::selectControl(int index)
     m_qmlStyler->setCurrentControl(name);
 }
 
+/*!
+  \internal
+  Shows or hides a modified mark (asterisk) for a control specified with \a name,
+  according to \a modified value.
+*/
 void MainWindow::updateModifiedMark(const QString &name, bool modified)
 {
     CodeCacheItem &cci = m_codeCache[name];
@@ -193,6 +198,10 @@ void MainWindow::newStyle()
     addStyle(Style(dialog->name(), dialog->location()));
 }
 
+/*!
+  \internal
+  Opens directory as a style.
+*/
 void MainWindow::openStyle()
 {
     const QFileInfo fi(QFileDialog::getExistingDirectory(this));
@@ -201,12 +210,20 @@ void MainWindow::openStyle()
     addStyle(Style(fi.fileName(), fi.absolutePath()));
 }
 
+/*!
+  \internal
+  Saves content of the current file.
+*/
 void MainWindow::saveFile()
 {
     save(m_currentControlName);
     reloadPreview();
 }
 
+/*!
+  \internal
+  Saves contents of all modified files.
+*/
 void MainWindow::saveAll()
 {
     foreach (const QString &name, m_codeCache.keys())
@@ -214,6 +231,10 @@ void MainWindow::saveAll()
     reloadPreview();
 }
 
+/*!
+  \internal
+  Adds style to the style list. The added style will be selected if \a select is \c true.
+*/
 void MainWindow::addStyle(const Style &style, bool select)
 {
     m_styles.append(style);
@@ -230,6 +251,12 @@ void MainWindow::addStyle(const Style &style, bool select)
         ui->styleComboBox->setCurrentIndex(ui->styleComboBox->count() - 1);
 }
 
+/*!
+  \internal
+  Actually performs file saving. Called by \l saveFile and \l saveAll.
+
+  \sa saveFile, saveAll
+*/
 void MainWindow::save(const QString &name)
 {
     CodeCacheItem &cci = m_codeCache[name];
@@ -258,6 +285,9 @@ void MainWindow::save(const QString &name)
     updateModifiedMark(cci.name, false);
 }
 
+/*!
+  \internal
+*/
 void MainWindow::reloadPreview()
 {
     ui->quickWidget->engine()->clearComponentCache();
@@ -265,6 +295,10 @@ void MainWindow::reloadPreview()
     ui->quickWidget->setSource(QStringLiteral("qrc:/preview/main.qml"));
 }
 
+/*!
+  \internal
+  Looks for styles built in Qt Quick Controls.
+*/
 void MainWindow::findBuiltInStyles()
 {
     foreach (const QString &importPath, ui->quickWidget->engine()->importPathList()) {
