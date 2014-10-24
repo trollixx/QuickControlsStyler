@@ -25,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setupActions();
 
+    // Create now to avoid crash when styles are loaded
+    m_qmlStyler = new StylerQmlObject(ui->quickWidget->engine(), this);
+
     findBuiltInStyles();
 
     connect(ui->controlComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -42,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     if (ui->styleComboBox->count())
         selectStyle(0);
 
-    m_qmlStyler = new StylerQmlObject(ui->quickWidget->engine(), this);
     ui->quickWidget->rootContext()
             ->setContextProperty(QStringLiteral("__qcStyler"), m_qmlStyler);
     ui->quickWidget->setSource(QStringLiteral("qrc:/main.qml"));
