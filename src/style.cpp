@@ -32,7 +32,7 @@ Style::Style(const QString &fullPath, bool builtIn) :
 
     m_name = dir.dirName();
     m_path = dir.absolutePath();
-    m_path.chop(m_name.size());
+    m_path.chop(m_name.size() + 1);
 
     /// TODO: Inform about error
     if (!dir.exists()) {
