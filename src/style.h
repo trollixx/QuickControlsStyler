@@ -60,4 +60,14 @@ private:
     QStringList m_controls;
 };
 
+inline bool operator==(const Style &lhs, const Style &rhs)
+{
+    return lhs.fullPath() == rhs.fullPath();
+}
+
+inline bool operator!=(const Style &lhs, const Style &rhs)
+{
+    return !(lhs == rhs);
+}
+
 #endif // STYLE_H

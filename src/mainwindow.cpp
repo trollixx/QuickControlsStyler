@@ -235,10 +235,7 @@ void MainWindow::saveAll()
 */
 void MainWindow::addStyle(const Style &style, bool select)
 {
-    foreach (const Style &loadedStyle, m_styles) {
-        if (loadedStyle.fullPath() != style.fullPath())
-            continue;
-
+    if (m_styles.contains(style)) {
         QMessageBox::information(this, tr("Error"), tr("Style is already open."));
         return;
     }
