@@ -31,6 +31,10 @@ Style::Style(const QString &fullPath, bool builtIn) :
     QDir dir(fullPath);
 
     m_name = dir.dirName();
+
+    if (m_name.isEmpty()) //
+        return;
+
     m_path = dir.absolutePath();
     m_path.chop(m_name.size() + 1);
 
@@ -65,6 +69,11 @@ Style::Style(const QString &fullPath, bool builtIn) :
 Style::Style(const QString &name, const QString &path, bool builtIn) :
     Style(path + QStringLiteral("/") + name, builtIn)
 {
+}
+
+bool Style::isValid() const
+{
+    return !m_name.isEmpty() && QDir(fullPath()).exists();
 }
 
 QString Style::name() const
