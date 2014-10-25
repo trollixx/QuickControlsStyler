@@ -25,12 +25,14 @@
 #include <QDir>
 #include <QFileInfo>
 
-Style::Style(const QString &name, const QString &path, bool builtIn) :
-    m_name(name),
-    m_path(path),
+Style::Style(const QString &fullPath, bool builtIn) :
     m_builtIn(builtIn)
 {
-    QDir dir(m_path + QStringLiteral("/") + m_name);
+    QDir dir(fullPath);
+
+    m_name = dir.dirName();
+    m_path = dir.absolutePath();
+    m_path.chop(m_name.size());
 
     /// TODO: Inform about error
     if (!dir.exists()) {
@@ -58,6 +60,11 @@ Style::Style(const QString &name, const QString &path, bool builtIn) :
             continue;
         m_controls << name;
     }
+}
+
+Style::Style(const QString &name, const QString &path, bool builtIn) :
+    Style(path + QStringLiteral("/") + name, builtIn)
+{
 }
 
 QString Style::name() const

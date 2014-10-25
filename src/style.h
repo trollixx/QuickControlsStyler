@@ -29,6 +29,7 @@
 class Style
 {
 public:
+    explicit Style(const QString &fullPath, bool builtIn = false);
     explicit Style(const QString &name, const QString &path, bool builtIn = false);
 
     QString name() const;
