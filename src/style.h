@@ -50,8 +50,6 @@ public:
     QString controlFilePath(const QString &control) const;
 
 private:
-    friend class StyleManager;
-
     QString m_name;
     QString m_path;
     bool m_builtIn = false;
