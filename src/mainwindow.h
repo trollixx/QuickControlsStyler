@@ -31,6 +31,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class QSettings;
+
 class StylerQmlObject;
 
 class MainWindow : public QMainWindow
@@ -65,17 +67,22 @@ private slots:
     void saveAll();
 
 private: // Methods
+    void loadSettings();
+    void saveSettings();
+
     void addRecentStyleMenuItem(const QString &path);
     void addStyle(const Style &style, bool select = true);
     void save(const QString &name);
     void reloadPreview();
     void findBuiltInStyles();
     void setupActions();
+
     static bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
 
 private: // Variables
     Ui::MainWindow *ui;
 
+    QSettings *m_settings = nullptr;
     QStringList m_recentStyles;
 
     StylerQmlObject *m_qmlStyler = nullptr;

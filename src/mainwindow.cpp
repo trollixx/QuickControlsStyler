@@ -33,10 +33,12 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QScrollBar>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_settings(new QSettings(this))
 {
     ui->setupUi(this);
 
@@ -46,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->controlComboBox->setFocusProxy(ui->plainTextEdit);
 
     setupActions();
+    loadSettings();
 
     // Create now to avoid crash when styles are loaded
     m_qmlStyler = new StylerQmlObject(ui->quickWidget->engine(), this);
@@ -75,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    saveSettings();
+
     delete ui;
 }
 
@@ -222,6 +227,7 @@ void MainWindow::openRecentStyle()
     const QFileInfo fi(action->text());
     if (!fi.exists())
         return;
+
     addStyle(Style(fi.fileName(), fi.absolutePath()));
 }
 
@@ -244,6 +250,21 @@ void MainWindow::saveAll()
     foreach (const QString &name, m_codeCache.keys())
         save(name);
     reloadPreview();
+}
+
+void MainWindow::loadSettings()
+{
+    const QStringList recentStyles
+            = m_settings->value(QStringLiteral("RecentStyles")).toStringList();
+    foreach (const QString &path, recentStyles)
+        addRecentStyleMenuItem(path);
+}
+
+void MainWindow::saveSettings()
+{
+    m_settings->setValue(QStringLiteral("RecentStyles"), m_recentStyles);
+
+    m_settings->sync();
 }
 
 /*!
