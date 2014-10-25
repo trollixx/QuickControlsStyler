@@ -202,7 +202,24 @@ void MainWindow::newStyle()
 */
 void MainWindow::openStyle()
 {
-    const QFileInfo fi(QFileDialog::getExistingDirectory(this));
+    const QString path = QFileDialog::getExistingDirectory(this);
+    if (path.isEmpty())
+        return;
+    addStyle(Style(path));
+}
+
+/*!
+  \internal
+  Opens a style from the recent list.
+*/
+void MainWindow::openRecentStyle()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+
+    if (!action)
+        return;
+
+    const QFileInfo fi(action->text());
     if (!fi.exists())
         return;
     addStyle(Style(fi.fileName(), fi.absolutePath()));
@@ -231,6 +248,27 @@ void MainWindow::saveAll()
 
 /*!
   \internal
+  Adds (or moves up) style path in the recent styles menu.
+*/
+void MainWindow::addRecentStyleMenuItem(const QString &path)
+{
+    // We want the style to be on top of the list, if was already there.
+    if (m_recentStyles.contains(path)) {
+        const int index = m_recentStyles.indexOf(path);
+        ui->menuRecentStyles->removeAction(ui->menuRecentStyles->actions().at(index));
+        m_recentStyles.removeAt(index);
+    }
+
+    QAction *action = new QAction(path, ui->menuRecentStyles);
+    connect(action, &QAction::triggered, this, &MainWindow::openRecentStyle);
+    ui->menuRecentStyles->insertAction(ui->menuRecentStyles->actions().value(0), action);
+    m_recentStyles.prepend(path);
+
+    ui->menuRecentStyles->setEnabled(true);
+}
+
+/*!
+  \internal
   Adds style to the style list. The added style will be selected if \a select is \c true.
 */
 void MainWindow::addStyle(const Style &style, bool select)
@@ -241,6 +279,9 @@ void MainWindow::addStyle(const Style &style, bool select)
     }
 
     m_styles.append(style);
+
+    if (!style.isBuiltIn())
+        addRecentStyleMenuItem(style.fullPath());
 
     QString displayName = style.name();
     if (style.isBuiltIn())

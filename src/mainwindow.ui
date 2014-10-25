@@ -84,12 +84,21 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuRecentStyles">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>&amp;Recent Styles</string>
+     </property>
+    </widget>
     <addaction name="actionNewStyle"/>
     <addaction name="actionOpenStyle"/>
-    <addaction name="actionSaveStyleAs"/>
+    <addaction name="menuRecentStyles"/>
     <addaction name="separator"/>
     <addaction name="actionSaveFile"/>
     <addaction name="actionSaveAll"/>
+    <addaction name="actionSaveStyleAs"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>

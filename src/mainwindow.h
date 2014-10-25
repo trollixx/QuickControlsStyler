@@ -59,11 +59,13 @@ private slots:
 
     void newStyle();
     void openStyle();
+    void openRecentStyle();
 
     void saveFile();
     void saveAll();
 
 private: // Methods
+    void addRecentStyleMenuItem(const QString &path);
     void addStyle(const Style &style, bool select = true);
     void save(const QString &name);
     void reloadPreview();
@@ -73,6 +75,8 @@ private: // Methods
 
 private: // Variables
     Ui::MainWindow *ui;
+
+    QStringList m_recentStyles;
 
     StylerQmlObject *m_qmlStyler = nullptr;
 
